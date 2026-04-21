@@ -36,12 +36,12 @@ if __name__ == "__main__":
             raise ValueError("Elasticsearch client is not initialized")
 
         # 创建Index
-        await client.indices.create(
-            index="books",
-        )
+        # await client.indices.create(
+        #     index="books",
+        # )
 
         # add data to index
-        await client.index(
+        resp = await client.index(
             index="books",
             document={
                 "name": "Snow Crash",
@@ -51,66 +51,8 @@ if __name__ == "__main__":
             },
         )
 
-        # add multiple data to index
-        await client.bulk(
-            operations=[
-                {
-                    "index": {
-                        "_index": "books"
-                    }
-                },
-                {
-                    "name": "Revelation Space",
-                    "author": "Alastair Reynolds",
-                    "release_date": "2000-03-15",
-                    "page_count": 585
-                },
-                {
-                    "index": {
-                        "_index": "books"
-                    }
-                },
-                {
-                    "name": "1984",
-                    "author": "George Orwell",
-                    "release_date": "1985-06-01",
-                    "page_count": 328
-                },
-                {
-                    "index": {
-                        "_index": "books"
-                    }
-                },
-                {
-                    "name": "Fahrenheit 451",
-                    "author": "Ray Bradbury",
-                    "release_date": "1953-10-15",
-                    "page_count": 227
-                },
-                {
-                    "index": {
-                        "_index": "books"
-                    }
-                },
-                {
-                    "name": "Brave New World",
-                    "author": "Aldous Huxley",
-                    "release_date": "1932-06-01",
-                    "page_count": 268
-                },
-                {
-                    "index": {
-                        "_index": "books"
-                    }
-                },
-                {
-                    "name": "The Handmaids Tale",
-                    "author": "Margaret Atwood",
-                    "release_date": "1985-06-01",
-                    "page_count": 311
-                }
-            ],
-        )
+        print(resp)
+        await es_client_manager.close()
 
     asyncio.run(es_test())
 
