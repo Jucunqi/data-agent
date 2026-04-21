@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Qdrant Client Manager",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/app/clients/qdrant_clint_manager.py",
+      "cwd": "${workspaceFolder}",
+      "envFile": "${workspaceFolder}/.env",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}
