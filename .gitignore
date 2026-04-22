@@ -1,10 +1,109 @@
-# Python-generated files
+# ==============================================
+# Python 通用
+# ==============================================
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+.env
+.env.*
+!.env.example
 
-# Virtual environments
-.venv
+# 分发文件
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# ==============================================
+# AI / LLM / 大模型 相关
+# ==============================================
+# 模型权重、缓存、checkpoint
+*.bin
+*.safetensors
+*.pth
+*.pt
+*.ckpt
+*.model
+*.onnx
+*.ort
+models/
+model/
+weights/
+checkpoints/
+checkpoint/
+runs/
+wandb/
+output/
+generated/
+results/
+
+# Hugging Face 缓存
+~/.cache/huggingface/
+.cache/huggingface/
+*.huggingface/
+
+# LangChain / LlamaIndex 缓存
+langchain_cache/
+llama_index_cache/
+
+# 数据集（太大不上传）
+data/
+dataset/
+datasets/
+*.csv
+*.jsonl
+*.parquet
+*.zip
+*.tar.gz
+*.rar
+
+# ==============================================
+# 日志、临时文件
+# ==============================================
+logs/
+*.log
+tmp/
+temp/
+*.tmp
+*.swp
+*.bak
+
+# ==============================================
+# 系统 & IDE
+# ==============================================
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+.vs/
+*.sublime-*
+
+# ==============================================
+# 密钥、配置绝对不上传
+# ==============================================
+secret.key
+private.key
+api_key.json
+config.json
+credentials.json
