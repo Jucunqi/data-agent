@@ -23,8 +23,8 @@ class ValueESRepository:
         """
         如果不存在则创建
         """
-        if not self.client.indices.exists(index=self.index_name):
-            self.client.indices.create(
+        if not await self.client.indices.exists(index=self.index_name):
+            await self.client.indices.create(
                 index=self.index_name,
                 mappings=self.index_mappings
             )

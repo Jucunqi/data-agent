@@ -42,7 +42,6 @@ var/
 *.model
 *.onnx
 *.ort
-models/
 model/
 weights/
 checkpoints/
