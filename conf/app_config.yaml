@@ -12,15 +12,14 @@ logging:
 db_meta:
   host: 192.168.0.32
   port: 3307
-  user: luca
-  # 从环境变量中获取
+  user: root
   password: 1qaz!QAZ
   database: meta
 
 db_dw:
   host: 192.168.0.32
   port: 3307
-  user: luca
+  user: root
   password: 1qaz!QAZ
   database: dw
 

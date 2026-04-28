@@ -4,14 +4,17 @@ MySQL 客户端
 import asyncio
 
 from app.conf.app_config import DBConfig, app_config
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine, AsyncSession
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncEngine
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio.session import async_sessionmaker
+
 
 # MySQL 客户端管理器
 class MySQLClientManager():
 
     def __init__(self, config: DBConfig):
         self.engine: AsyncEngine | None = None
+        self.session_factory = None
         self.config = config
 
     def _get_url(self):
@@ -19,10 +22,12 @@ class MySQLClientManager():
 
     def init(self):
         self.engine = create_async_engine(self._get_url())
+        self.session_factory = async_sessionmaker(self.engine, autoflush=True, expire_on_commit=True)
 
     async def close(self):
         if self.engine:
             await self.engine.dispose()
+
 
 # MySQL 客户端管理器实例 单例
 dw_client_manager = MySQLClientManager(app_config.db_dw)
@@ -33,7 +38,7 @@ if __name__ == '__main__':
         dw_client_manager.init()
         engine = dw_client_manager.engine
 
-        async with AsyncSession(engine) as session:
+        async with dw_client_manager.session_factory() as session:
             sql = "select * from dim_customer limit 10"
 
             resp = await session.execute(text(sql))
