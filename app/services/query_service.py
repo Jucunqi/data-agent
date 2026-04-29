@@ -1,3 +1,4 @@
+import json
 from app.agent.context import DataAgentContext
 from app.agent.graph import graph
 from app.agent.state import DataAgentState
@@ -33,5 +34,9 @@ class QueryService:
                                    value_es_repository=self.value_es_repository,
                                    meta_mysql_repository=self.meta_mysql_repository,
                                    dw_mysql_repository=self.dw_mysql_repository)
-        async for chunk in graph.astream(input=state, context=context, stream_mode="custom"):
-            yield f"data: {chunk}\n\n"
+        try:
+            async for chunk in graph.astream(input=state, context=context, stream_mode="custom"):
+                yield f"data: {json.dumps(chunk, ensure_ascii=False, default=str)}\n\n"
+        except Exception as e:
+            error = {"type": "error", "message": str(e)}
+            yield f"data: {json.dumps(error, ensure_ascii=False, default=str)}\n\n"

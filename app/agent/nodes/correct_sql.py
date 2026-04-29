@@ -10,24 +10,32 @@ from app.prompt.prompt_loader import load_prompt
 
 async def correct_sql(state: DataAgentState, runtime: Runtime[DataAgentContext]):
     writer = runtime.stream_writer
-    writer("修正SQL")
+    step = "修正SQL"
+    writer({"type": "progress", "step": step, "status": "running"})
 
-    query = state["query"]
-    table_infos = state["table_infos"]
-    metric_infos = state["metric_infos"]
-    date_info = state["date_info"]
-    db_info = state["db_info"]
-    sql = state["sql"]
-    error = state["error"]
+    try:
+        query = state["query"]
+        table_infos = state["table_infos"]
+        metric_infos = state["metric_infos"]
+        date_info = state["date_info"]
+        db_info = state["db_info"]
+        sql = state["sql"]
+        error = state["error"]
 
-    # 借助llm生成sql
-    prompt_template = PromptTemplate(template=load_prompt(name="correct_sql"),
-                                     input_variables=["table_infos", "metric_infos", "date_info", "db_info", "query","sql","error"])
+        # 借助llm生成sql
+        prompt_template = PromptTemplate(template=load_prompt(name="correct_sql"),
+                                         input_variables=["table_infos", "metric_infos", "date_info", "db_info",
+                                                          "query", "sql", "error"])
 
-    output_parser = StrOutputParser()
-    chain = prompt_template | llm | output_parser
-    result = await chain.ainvoke(
-        {"table_infos": table_infos, "metric_infos": metric_infos, "date_info": date_info, "db_info": db_info,
-         "query": query, "sql": sql, "error": error})
-    logger.info(f"修改之后的sql：{result}")
-    return {"sql": result}
+        output_parser = StrOutputParser()
+        chain = prompt_template | llm | output_parser
+        result = await chain.ainvoke(
+            {"table_infos": table_infos, "metric_infos": metric_infos, "date_info": date_info, "db_info": db_info,
+             "query": query, "sql": sql, "error": error})
+        logger.info(f"修改之后的sql：{result}")
+        writer({"type": "progress", "step": step, "status": "success"})
+        return {"sql": result}
+    except Exception as e:
+        logger.info(f"修正SQL异常: {str(e)}")
+        writer({"type": "progress", "step": step, "status": "error"})
+        raise
