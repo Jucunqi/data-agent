@@ -1,3 +1,5 @@
+from typing import Any
+
 from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,3 +28,14 @@ class DwMySQLRepository:
         result_dict = result.fetchall()
         # 最终的结构是一个列表，每个元素是一个字典，包含字段值
         return [row[0] for row in result_dict]
+
+    async def get_db_info(self):
+        """
+        获取数据库的版本和方言信息
+        :return: 字典
+        """
+        sql = "select version()"
+        resp = await self.session.execute(text(sql))
+        version = resp.scalar()
+        dialect = self.session.bind.dialect.name
+        return {"dialect": dialect, "version": version}

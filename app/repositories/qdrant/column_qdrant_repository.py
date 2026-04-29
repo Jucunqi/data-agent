@@ -3,6 +3,7 @@ from qdrant_client.http.models import PointStruct
 from qdrant_client.models import VectorParams, Distance
 
 from app.conf.app_config import app_config
+from app.entities.column_info import ColumnInfo
 
 
 class ColumnQdrantRepository:
@@ -28,3 +29,12 @@ class ColumnQdrantRepository:
                 collection_name=self.collection_name,
                 points=batch_points
             )
+
+    async def search(self, embedding, score_threshold, limit) -> list[ColumnInfo]:
+        result = await self.client.query_points(
+            collection_name=self.collection_name,
+            query=embedding,
+            limit=limit,
+            score_threshold=score_threshold
+        )
+        return [ColumnInfo(**point.payload) for point in result.points]

@@ -2,6 +2,7 @@ from qdrant_client import AsyncQdrantClient
 from qdrant_client.http.models import PointStruct
 from qdrant_client.models import VectorParams, Distance
 from app.conf.app_config import app_config
+from app.entities.metric_info import MetricInfo
 
 
 class MetricQdrantRepository:
@@ -27,3 +28,12 @@ class MetricQdrantRepository:
                 collection_name=self.collection_name,
                 vectors_config=VectorParams(size=app_config.qdrant.embedding_size, distance=Distance.COSINE),
             )
+
+    async def search(self, embedding, score_threshold, limit):
+        result = await self.client.query_points(
+            collection_name=self.collection_name,
+            query=embedding,
+            limit=limit,
+            score_threshold=score_threshold
+        )
+        return [MetricInfo(**point.payload) for point in result.points]

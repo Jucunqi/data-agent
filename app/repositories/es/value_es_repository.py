@@ -50,3 +50,17 @@ class ValueESRepository:
                 index=self.index_name,
                 operations=operations
             )
+
+    async def search(self, keyword, score_threshold, limit) -> list[ValueInfo]:
+        resp = await self.client.search(
+            index=self.index_name,
+            query={
+                "match": {
+                    "value": keyword
+                }
+            },
+            size=limit,
+            min_score=score_threshold
+        )
+
+        return [ValueInfo(**hit["_source"]) for hit in resp["hits"]["hits"]]
